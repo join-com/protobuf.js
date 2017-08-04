@@ -327,14 +327,7 @@ converter.toObject = function toObject(mtype) {
             ("d%s=o.longs===String?%j:%i", prop, field.typeDefault.toString(), field.typeDefault.toNumber());
             else if (field.bytes) gen
         ("d%s=o.bytes===String?%j:%s", prop, String.fromCharCode.apply(String, field.typeDefault), "[" + Array.prototype.slice.call(field.typeDefault).join(",") + "]");
-            else {
-              if (field.resolvedType && WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1) gen
-        ("if(m.hasOwnProperty(%s))", prop);
-        gen
-        ("d%s=%j", prop, field.typeDefault); // also messages (=null)
-          }
-        } gen
-    ("}");
+        } gen("}");
     }
     var hasKs2 = false;
     for (i = 0; i < fields.length; ++i) {
