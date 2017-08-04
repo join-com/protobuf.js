@@ -85,6 +85,10 @@ common("duration", {
             nanos: {
                 type: "int32",
                 id: 2
+            },
+            isNull: {
+              type: "bool",
+              id: 3
             }
         }
     }
@@ -226,6 +230,10 @@ common("wrappers", {
             value: {
                 type: "double",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -242,6 +250,10 @@ common("wrappers", {
             value: {
                 type: "float",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -258,6 +270,10 @@ common("wrappers", {
             value: {
                 type: "int64",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -274,6 +290,10 @@ common("wrappers", {
             value: {
                 type: "uint64",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -290,6 +310,10 @@ common("wrappers", {
             value: {
                 type: "int32",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -306,6 +330,10 @@ common("wrappers", {
             value: {
                 type: "uint32",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -322,6 +350,10 @@ common("wrappers", {
             value: {
                 type: "bool",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -338,6 +370,10 @@ common("wrappers", {
             value: {
                 type: "string",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     },
@@ -354,6 +390,10 @@ common("wrappers", {
             value: {
                 type: "bytes",
                 id: 1
+            },
+            isNull: {
+              type: "bool",
+              id: 2
             }
         }
     }
