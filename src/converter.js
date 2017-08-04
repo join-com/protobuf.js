@@ -8,6 +8,18 @@ var converter = exports;
 var Enum = require("./enum"),
     util = require("./util");
 
+var WRAPPER_TYPES = [
+  'BytesValue',
+  'BoolValue',
+  'UInt32Value',
+  'Int32Value',
+  'UInt64Value',
+  'Int64Value',
+  'FloatValue',
+  'DoubleValue',
+  'StringValue'
+]
+
 /**
  * Generates a partial value fromObject conveter.
  * @param {Codegen} gen Codegen instance
@@ -32,6 +44,10 @@ function genValuePartial_fromObject(gen, field, fieldIndex, prop) {
                     ("break");
             } gen
             ("}");
+        }
+        else if (WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1) {
+          gen
+            ("m%s={value: String(d%s)}", prop, prop);
         } else gen
             ("if(typeof d%s!==\"object\")", prop)
                 ("throw TypeError(%j)", field.fullName + ": object expected")
@@ -157,6 +173,10 @@ function genValuePartial_toObject(gen, field, fieldIndex, prop) {
     if (field.resolvedType) {
         if (field.resolvedType instanceof Enum) gen
             ("d%s=o.enums===String?types[%i].values[m%s]:m%s", prop, fieldIndex, prop, prop);
+        else if (WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1) {
+          gen
+            ("d%s=m%s.value", prop, prop);
+        }
         else gen
             ("d%s=types[%i].toObject(m%s,o)", prop, fieldIndex, prop);
     } else {

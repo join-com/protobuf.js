@@ -4,6 +4,18 @@ module.exports = verifier;
 var Enum      = require("./enum"),
     util      = require("./util");
 
+var WRAPPER_TYPES = [
+    'BytesValue',
+    'BoolValue',
+    'UInt32Value',
+    'Int32Value',
+    'UInt64Value',
+    'Int64Value',
+    'FloatValue',
+    'DoubleValue',
+    'StringValue'
+  ]
+
 function invalid(field, expected) {
     return field.name + ": " + expected + (field.repeated && expected !== "array" ? "[]" : field.map && expected !== "object" ? "{k:"+field.keyType+"}" : "") + " expected";
 }
@@ -121,10 +133,13 @@ function genVerifyKey(gen, field, ref) {
  */
 function verifier(mtype) {
     /* eslint-disable no-unexpected-multiline */
-
+    // console.log(mtype)
     var gen = util.codegen(["m"], mtype.name + "$verify")
-    ("if(typeof m!==\"object\"||m===null)")
-        ("return%j", "object expected");
+    if (WRAPPER_TYPES.indexOf(mtype.name) === -1) {
+      gen
+      ("if(typeof m!==\"object\"||m===null)")
+          ("return%j", "object expected");
+    }
     var oneofs = mtype.oneofsArray,
         seenFirstField = {};
     if (oneofs.length) gen
