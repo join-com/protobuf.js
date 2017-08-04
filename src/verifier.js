@@ -133,7 +133,6 @@ function genVerifyKey(gen, field, ref) {
  */
 function verifier(mtype) {
     /* eslint-disable no-unexpected-multiline */
-    // console.log(mtype)
     var gen = util.codegen(["m"], mtype.name + "$verify")
     if (WRAPPER_TYPES.indexOf(mtype.name) === -1) {
       gen
