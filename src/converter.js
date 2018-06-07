@@ -6,7 +6,8 @@
 var converter = exports;
 
 var Enum = require("./enum"),
-    util = require("./util");
+    util = require("./util"),
+    Type = require("./type");
 
 var WRAPPER_TYPES = [
   'BytesValue',
@@ -192,11 +193,21 @@ converter.fromObject = function fromObject(mtype) {
         } else {
             // if (field.resolvedType && (WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1 || field.resolvedType.name === TIMESTAMP_TYPE)) gen
             //     ("if(typeof d%s!==\"undefined\"){", prop);
-            if (!(field.resolvedType instanceof Enum)) gen // no need to test for null/undefined if an enum (uses switch)
-                ("if(d%s!==undefined){", prop); // !== undefined && !== null
+            if ((field.resolvedType instanceof Enum)) {
+                genValuePartial_fromObject(gen, field, /* not sorted */ i, prop);
+            } else {
+                if (field.resolvedType instanceof Type) {
+                    gen
+                        ("if(d%s!==undefined){", prop); // !== undefined && !== null
+                    genValuePartial_fromObject(gen, field, /* not sorted */ i, prop)
+                        ("if(d%s===null)", prop)
+                        ("m%s={}", prop)
+                } else {
+                    gen
+                        ("if(d%s!=null){", prop); // !== undefined && !== null
                     genValuePartial_fromObject(gen, field, /* not sorted */ i, prop);
-                gen("if(d%s===null)", prop)
-                    ("m%s={}", prop)
+                }
+            }
             if (!(field.resolvedType instanceof Enum)) gen
     ("}");
         }
@@ -217,10 +228,12 @@ converter.fromObject = function fromObject(mtype) {
 function genValuePartial_toObject(gen, field, fieldIndex, prop) {
     /* eslint-disable no-unexpected-multiline, block-scoped-var, no-redeclare */
     if (field.resolvedType) { gen
-        if (!(field.resolvedType instanceof Enum)) gen
-          ("if (Object.keys(m%s).length===0)", prop)
-          ("d%s=null", prop)
-          ("else");
+        if (field.resolvedType instanceof Type) { gen
+            gen
+                ("if (Object.keys(m%s).length===0)", prop)
+                ("d%s=null", prop)
+                ("else");
+        }
         if (field.resolvedType instanceof Enum) gen
             ("d%s=(o.enums===String?types[%i].values[m%s]:m%s) || null", prop, fieldIndex, prop, prop);
         else if (WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1) {
