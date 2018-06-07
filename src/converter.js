@@ -191,8 +191,6 @@ converter.fromObject = function fromObject(mtype) {
 
         // Non-repeated fields
         } else {
-            // if (field.resolvedType && (WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1 || field.resolvedType.name === TIMESTAMP_TYPE)) gen
-            //     ("if(typeof d%s!==\"undefined\"){", prop);
             if ((field.resolvedType instanceof Enum)) {
                 genValuePartial_fromObject(gen, field, /* not sorted */ i, prop);
             } else {
