@@ -191,21 +191,9 @@ converter.fromObject = function fromObject(mtype) {
 
         // Non-repeated fields
         } else {
-            if ((field.resolvedType instanceof Enum)) {
-                genValuePartial_fromObject(gen, field, /* not sorted */ i, prop);
-            } else {
-                if (field.resolvedType instanceof Type) {
-                    gen
-                        ("if(d%s!==undefined){", prop); // !== undefined && !== null
-                    genValuePartial_fromObject(gen, field, /* not sorted */ i, prop)
-                        ("if(d%s===null)", prop)
-                        ("m%s={}", prop)
-                } else {
-                    gen
-                        ("if(d%s!=null){", prop); // !== undefined && !== null
-                    genValuePartial_fromObject(gen, field, /* not sorted */ i, prop);
-                }
-            }
+            if (!(field.resolvedType instanceof Enum)) gen // no need to test for null/undefined if an enum (uses switch)
+        ("if(d%s!=null){", prop); // !== undefined && !== null
+            genValuePartial_fromObject(gen, field, /* not sorted */ i, prop);
             if (!(field.resolvedType instanceof Enum)) gen
     ("}");
         }
@@ -226,14 +214,8 @@ converter.fromObject = function fromObject(mtype) {
 function genValuePartial_toObject(gen, field, fieldIndex, prop) {
     /* eslint-disable no-unexpected-multiline, block-scoped-var, no-redeclare */
     if (field.resolvedType) { gen
-        if (field.resolvedType instanceof Type) { gen
-            gen
-                ("if (Object.keys(m%s).length===0)", prop)
-                ("d%s=null", prop)
-                ("else");
-        }
         if (field.resolvedType instanceof Enum) gen
-            ("d%s=(o.enums===String?types[%i].values[m%s]:m%s) || null", prop, fieldIndex, prop, prop);
+            ("d%s=(o.enums===String?types[%i].values[m%s]:m%s)", prop, fieldIndex, prop, prop);
         else if (WRAPPER_TYPES.indexOf(field.resolvedType.name) !== -1) {
           gen
             ("d%s=m%s.value", prop, prop);

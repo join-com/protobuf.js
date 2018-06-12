@@ -137,10 +137,7 @@ function verifier(mtype) {
     /* eslint-disable no-unexpected-multiline */
 
     var gen = util.codegen(["m"], mtype.name + "$verify")
-    if (WRAPPER_TYPES.indexOf(mtype.name) === -1) { gen
-        ("if(typeof m!==\"object\")")
         ("return%j", "object expected");
-    }
     var oneofs = mtype.oneofsArray,
         seenFirstField = {};
     if (oneofs.length) gen
